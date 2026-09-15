@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150" role="img" aria-labelledby="title desc">
+  <title id="title">BuildAssist</title><desc id="desc">BuildAssist logo with Plan. Build. Smarter. tagline</desc>
+  <g transform="translate(8 12)">
+    <path fill="#0F2A44" d="M0 112V64l20-16v64H0Zm30 0V42l20-16v86H30Zm30 0V20L80 4v108H60Z"/>
+    <path fill="#D8A017" d="M38 112V38l15-12v86H38Zm24 0V20L77 8v104H62Z"/>
+    <path fill="#0F2A44" d="m80 4 32 19c8 5 12 13 12 22v29c0 8-4 15-11 20l-21 14 32 18v-16l-28-16 18-12c8-5 12-13 12-22V44c0-9-4-16-12-21L80 4Z"/>
+    <path fill="#0F2A44" d="M80 52v23l24 14 9-6c4-3 6-7 6-12V53c0-5-2-9-6-11L80 24v28Z"/>
+    <path fill="#fff" d="m80 24 33 18c4 2 6 6 6 11v18c0 5-2 9-6 12l-9 6-24-14V52l22 13V48L80 37V24Z"/>
+  </g>
+  <text x="174" y="78" font-family="Arial, Helvetica, sans-serif" font-size="56" font-weight="700" letter-spacing="-2"><tspan fill="#0F2A44">Build</tspan><tspan fill="#D8A017">Assist</tspan></text>
+  <text x="178" y="116" fill="#0F2A44" font-family="Arial, Helvetica, sans-serif" font-size="13" font-weight="700" letter-spacing="6">PLAN. BUILD. SMARTER.</text>
+</svg>

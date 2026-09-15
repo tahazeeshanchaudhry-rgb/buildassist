@@ -1,0 +1,6 @@
+import type { ChatMessage } from "../../types/chat";
+import MarkdownText from "./MarkdownText";
+
+export default function ChatMessages({ messages }: { messages: ChatMessage[] }) {
+  return <div className="space-y-5">{messages.map((item, index) => <div key={`${item.role}-${index}`} className={`flex ${item.role === "user" ? "justify-end" : "justify-start"}`}><div className={`max-w-[95%] overflow-hidden rounded-2xl px-4 py-4 text-sm leading-6 sm:max-w-[90%] ${item.role === "user" ? "rounded-br-md bg-slate-900 text-white" : "rounded-bl-md border border-slate-200 bg-white text-slate-700 shadow-sm"}`}>{item.role === "assistant" ? <MarkdownText content={item.content} /> : item.content}{item.role === "assistant" && item.sources?.length ? <div className="mt-4 border-t border-slate-200 pt-3 text-xs text-slate-400"><p className="font-semibold text-slate-500">Sources</p><div className="mt-1 space-y-1">{item.sources.filter((source, sourceIndex, sources) => sources.findIndex((candidate) => candidate.documentId === source.documentId && candidate.chunkIndex === source.chunkIndex) === sourceIndex).map((source) => <p key={`${source.documentId}-${source.chunkIndex}`}>{source.documentName}{source.pageNumber ? ` · Page ${source.pageNumber}` : ""}</p>)}</div></div> : null}</div></div>)}</div>;
+}
