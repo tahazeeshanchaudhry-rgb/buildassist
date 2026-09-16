@@ -1,4 +1,4 @@
-import { PDFParse } from "pdf-parse";
+import PDFParser from "pdf2json";
 
 export type SupportedDocumentType = "pdf" | "txt";
 
@@ -15,11 +15,28 @@ export async function extractDocumentText(buffer: Buffer, type: SupportedDocumen
     return new TextDecoder().decode(buffer);
   }
 
-  const parser = new PDFParse({ data: buffer });
-  try {
-    const result = await parser.getText();
-    return result.text;
-  } finally {
-    await parser.destroy();
-  }
+  const parser = new PDFParser(null, true);
+  const standaloneBuffer = Buffer.allocUnsafeSlow(buffer.length);
+  buffer.copy(standaloneBuffer);
+
+  return new Promise((resolve, reject) => {
+    const cleanup = () => parser.destroy();
+
+    parser.on("pdfParser_dataReady", () => {
+      const text = parser.getRawTextContent();
+      cleanup();
+      resolve(text);
+    });
+    parser.on("pdfParser_dataError", () => {
+      cleanup();
+      reject(new Error("PDF text extraction failed."));
+    });
+
+    try {
+      parser.parseBuffer(standaloneBuffer);
+    } catch {
+      cleanup();
+      reject(new Error("PDF text extraction failed."));
+    }
+  });
 }
