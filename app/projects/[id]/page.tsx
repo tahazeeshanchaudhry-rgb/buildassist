@@ -57,10 +57,18 @@ export default function ProjectDetailPage() {
     setProcessingDocumentId(document.id);
     try {
       const response = await fetch(`/api/project-documents/${document.id}/process`, { method: "POST" });
-      const data: unknown = await response.json();
+      let data: unknown = null;
+      try {
+        data = await response.json();
+      } catch {
+        // A proxy/runtime may return an empty or non-JSON error response.
+      }
       if (!response.ok) {
-        const message = typeof data === "object" && data !== null && "error" in data && typeof data.error === "string" ? data.error : "Unable to process the PDF.";
+        const message = typeof data === "object" && data !== null && "error" in data && typeof data.error === "string" ? data.error : "Unable to process the PDF. Please try again.";
         throw new Error(message);
+      }
+      if (typeof data !== "object" || data === null || !("status" in data) || data.status !== "ready") {
+        throw new Error("Unable to process the PDF. Please try again.");
       }
       setSuccess("PDF processed successfully.");
       const documentsResponse = await fetch(`/api/project-documents?projectId=${encodeURIComponent(id)}`);

@@ -64,7 +64,11 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
     if (readyError) throw new Error("Document status update failed");
 
     return NextResponse.json({ documentId: id, chunks: chunks.length, status: "ready" });
-  } catch {
+  } catch (error) {
+    const details = error instanceof Error
+      ? { name: error.name, message: error.message.replace(/AIza[\w-]{20,}/g, "[redacted]") }
+      : { message: "Unknown PDF processing error" };
+    console.error("PDF processing failed:", details);
     await supabase.from("document_chunks").delete().eq("document_id", id).eq("user_id", user.id);
     await updateDocumentStatus(id, user.id, "error");
     return NextResponse.json({ error: "Unable to process the PDF." }, { status: 500 });
