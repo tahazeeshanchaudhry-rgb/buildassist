@@ -1,7 +1,4 @@
-import { createRequire } from "node:module";
-
-const nodeRequire = createRequire(`${process.cwd()}/package.json`);
-const { PDFParse } = nodeRequire("pdf-parse") as typeof import("pdf-parse");
+import { PDFParse } from "pdf-parse";
 
 export type SupportedDocumentType = "pdf" | "txt";
 
