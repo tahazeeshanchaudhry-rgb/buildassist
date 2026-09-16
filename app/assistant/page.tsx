@@ -10,6 +10,7 @@ import { createClient } from "../../lib/supabase/client";
 import { listProjects } from "../../lib/projects";
 import type { Project } from "../../types/project";
 import type { Chat } from "../../lib/chats";
+import Icon from "../components/Icon";
 
 const supabase = createClient();
 
@@ -113,5 +114,32 @@ export default function AssistantPage() {
     await loadChats(selectedProjectId);
   }
 
-  return <main className="flex min-h-screen bg-[#f7f8fa] text-slate-900"><Sidebar onNewChat={newChat} chats={chats} activeChatId={activeChatId} onOpenChat={openChat} onDeleteChat={deleteChat} /><section className="flex min-w-0 flex-1 flex-col"><div className="mx-auto flex w-full max-w-5xl flex-1 flex-col px-5 py-8 sm:px-8 lg:px-12"><div className="mb-3 flex items-center justify-between gap-3"><label htmlFor="assistant-project" className="text-sm font-semibold text-slate-600">Project</label><select id="assistant-project" value={selectedProjectId} onChange={(event) => { setSelectedProjectId(event.target.value); newChat(); void loadChats(event.target.value); }} disabled={isPending || !projects.length} className="max-w-[70%] rounded-xl border border-slate-200 bg-white px-3 py-2 text-sm text-slate-700 shadow-sm outline-none focus:border-amber-400"><option value="">{projects.length ? "Select a project" : "No projects available"}</option>{projects.map((project) => <option key={project.id} value={project.id}>{project.name}</option>)}</select></div>{projectError ? <p role="alert" className="mb-4 text-sm text-red-600">{projectError}</p> : null}<div className="m-auto w-full max-w-3xl pb-36">{messages.length === 0 ? <WelcomeScreen onSuggestion={sendMessage} /> : <ChatMessages messages={messages} />}</div><ChatInput value={message} onChange={setMessage} disabled={isPending || !selectedProjectId} onSubmit={handleSubmit} /></div></section></main>;
+  return <main className="ba-page flex h-dvh min-h-0 flex-col overflow-hidden md:flex-row">
+    <Sidebar onNewChat={newChat} chats={chats} activeChatId={activeChatId} onOpenChat={openChat} onDeleteChat={deleteChat} />
+    <section className="flex min-h-0 min-w-0 flex-1 flex-col">
+      <header className="z-10 border-b border-[#e2e9ed] bg-white px-3 py-2.5 sm:px-6">
+        <div className="mx-auto flex w-full max-w-6xl items-center justify-between gap-3">
+          <div className="flex min-w-0 items-center gap-2.5 sm:gap-3.5">
+            <span className="ba-eyebrow shrink-0 whitespace-nowrap text-[.61rem] tracking-[.1em] sm:text-[.67rem]">Current project</span>
+            <label htmlFor="assistant-project" className="group flex min-w-0 max-w-[min(60vw,27rem)] items-center gap-2 rounded-xl border border-[#dfe7eb] bg-[#f8fafb] px-2.5 py-2 transition hover:border-[#bccbd4] hover:bg-white focus-within:border-[#8da7ba] focus-within:bg-white focus-within:shadow-[0_0_0_3px_rgb(30_91_255_/_8%)] sm:gap-2.5 sm:px-3">
+              <span className="grid h-7 w-7 shrink-0 place-items-center rounded-lg bg-[#eaf0f4] text-[#294c68] transition group-hover:bg-[#edf3f7]"><Icon name="building" size={15}/></span>
+              <select id="assistant-project" value={selectedProjectId} onChange={(event) => { setSelectedProjectId(event.target.value); newChat(); void loadChats(event.target.value); }} disabled={isPending || !projects.length} className="min-w-0 flex-1 cursor-pointer appearance-none truncate bg-transparent py-0.5 text-xs font-bold text-[#0F2A44] outline-none disabled:cursor-not-allowed sm:text-sm"><option value="">{projects.length ? "Select a project" : "No projects available"}</option>{projects.map((project) => <option key={project.id} value={project.id}>{project.name}</option>)}</select>
+              <Icon name="chevron" size={16} className="shrink-0 text-[#8190a0] transition group-hover:text-[#405c74]" />
+            </label>
+          </div>
+          <span className="flex shrink-0 items-center gap-2 text-[.66rem] font-semibold text-[#637487] sm:rounded-full sm:bg-[#f4f7f8] sm:px-3 sm:py-1.5"><span className="h-1.5 w-1.5 rounded-full bg-[#D8A017]" /> <span className="hidden sm:inline">Construction assistant</span><span className="sm:hidden">Assistant</span></span>
+        </div>
+      </header>
+      {projectError ? <p role="alert" className="mx-4 mt-3 rounded-xl border border-red-100 bg-red-50 px-4 py-2.5 text-sm text-red-700 sm:mx-7">{projectError}</p> : null}
+      <div className="ba-scrollbar min-h-0 flex-1 overflow-y-auto px-4 sm:px-7">
+        <div className={`mx-auto flex w-full max-w-4xl flex-col ${messages.length ? "py-7 sm:py-9" : "min-h-full justify-center py-8"}`}>
+          {messages.length === 0 ? <WelcomeScreen onSuggestion={sendMessage} /> : <ChatMessages messages={messages} />}
+        </div>
+      </div>
+      <footer className="z-10 border-t border-[#e4eaed] bg-[#f1f6f6]/95 px-3 py-3 pb-[max(.75rem,env(safe-area-inset-bottom))] backdrop-blur sm:px-6 sm:py-4">
+        <ChatInput value={message} onChange={setMessage} disabled={isPending || !selectedProjectId} onSubmit={handleSubmit} />
+        <p className="mx-auto mt-2 max-w-4xl text-center text-[.65rem] text-[#8591a0]">BuildAssist can make mistakes. Verify critical project decisions with your team.</p>
+      </footer>
+    </section>
+  </main>;
 }
