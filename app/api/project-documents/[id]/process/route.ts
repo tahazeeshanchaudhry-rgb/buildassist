@@ -24,8 +24,9 @@ export async function POST(_request: Request, { params }: { params: Promise<{ id
   if (document.status === "processing") return NextResponse.json({ error: "This document is already processing." }, { status: 409 });
   if (document.file_type !== "pdf" || !document.storage_path) return NextResponse.json({ error: "Only stored PDF documents can be processed." }, { status: 400 });
 
-  const { error: processingError } = await supabase.from("documents").update({ status: "processing" }).eq("id", id).eq("user_id", user.id);
+  const { data: claimedDocument, error: processingError } = await supabase.from("documents").update({ status: "processing" }).eq("id", id).eq("user_id", user.id).neq("status", "processing").select("id").maybeSingle();
   if (processingError) return NextResponse.json({ error: "Unable to start document processing." }, { status: 500 });
+  if (!claimedDocument) return NextResponse.json({ error: "This document is already processing." }, { status: 409 });
 
   const { error: removeError } = await supabase.from("document_chunks").delete().eq("document_id", id).eq("user_id", user.id);
   if (removeError) {

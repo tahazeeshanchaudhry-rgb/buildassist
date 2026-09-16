@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "eslint"
   },
+  "engines": {
+    "node": ">=20.18.0"
+  },
   "dependencies": {
     "@langchain/google-genai": "^2.3.2",
     "@langchain/textsplitters": "^1.0.1",

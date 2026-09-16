@@ -57,7 +57,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Only PDF files are supported." }, { status: 400 });
   }
   if (!file.size) return NextResponse.json({ error: "The PDF is empty." }, { status: 400 });
-  if (file.size > MAX_PROJECT_DOCUMENT_SIZE) return NextResponse.json({ error: "The PDF must be 10 MB or smaller." }, { status: 400 });
+  if (file.size > MAX_PROJECT_DOCUMENT_SIZE) return NextResponse.json({ error: "The PDF must be 4 MB or smaller." }, { status: 400 });
 
   const storagePath = `${user.id}/${projectId}/${randomUUID()}.pdf`;
   const { error: uploadError } = await supabase.storage.from(PROJECT_DOCUMENTS_BUCKET).upload(storagePath, Buffer.from(await file.arrayBuffer()), { contentType: "application/pdf", upsert: false });

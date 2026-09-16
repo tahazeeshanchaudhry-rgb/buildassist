@@ -26,7 +26,7 @@ export async function POST(request: Request) {
   }
 
   const rawHistory = body.history === undefined ? [] : body.history;
-  if (!Array.isArray(rawHistory)) {
+  if (!Array.isArray(rawHistory) || rawHistory.length > CHAT_HISTORY_LIMIT) {
     return NextResponse.json({ error: "Invalid conversation history." }, { status: 400 });
   }
 
